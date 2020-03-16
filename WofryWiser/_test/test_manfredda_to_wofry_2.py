@@ -82,12 +82,12 @@ if __name__ == '__main__':
     PropagationManager.Instance().add_propagator(WisePropagator())
 
     tl.Debug.On = True
-    N = 5000
+    N = 3000
     UseCustomSampling = True
     # SOURCE
     #==========================================================================
-    Lambda = 32e-9
-    Waist0 = Fermi.Waist0E(Lambda)
+    Lambda = 2e-9
+    Waist0 = 180e-6#Fermi.Waist0E(Lambda)
 
     s = WiserOpticalElement(name='FEL2 source',
                             boundary_shape=None,
@@ -99,10 +99,10 @@ if __name__ == '__main__':
                                 Angle=pi/4.-AngleGrazing)
                             )
 
-    # s.native_optical_element.ComputationSettings.UseSmallDisplacements = True
+    s.native_optical_element.ComputationSettings.UseSmallDisplacements = True
     s.native_optical_element.Orientation = Optics.OPTICS_ORIENTATION.ANY
-    # s.native_optical_element.SmallDisplacements.Long = DeltaSourceList[0]
-    # s.native_optical_element.SmallDisplacements.Rotation = 0.
+    s.native_optical_element.CoreOptics.SmallDisplacements.Long = DeltaSourceList[0]
+    s.native_optical_element.CoreOptics.SmallDisplacements.Rotation = 0.
 
     # PM1 (h)
     #==========================================================================
@@ -182,30 +182,16 @@ if __name__ == '__main__':
     kb_h.native_optical_element.ComputationSettings.NSamples = N
     kb_h.native_optical_element.CoreOptics.FigureErrorLoad(File='kbh.txt', Step=2e-3, AmplitudeScaling=-1e-3)
 
-    # SL(v)
-    # =========================================================================
-    sl_v = WiserOpticalElement(name='sl_v',
-                               boundary_shape=None,
-                               native_CoreOptics=Optics.Slits(L=1.),
-                               native_PositioningDirectives=Foundation.PositioningDirectives(
-                                   ReferTo='upstream',
-                                   PlaceWhat='centre',
-                                   PlaceWhere='centre',
-                                   Distance=0.5)
-                               )
-
-    sl_v.native_optical_element.CoreOptics.Orientation = Optics.OPTICS_ORIENTATION.VERTICAL
-
     # detector (v)
     # ==========================================================================
     d_v = WiserOpticalElement(name='detector_v',
                               boundary_shape=None,
                               native_CoreOptics=Optics.Detector(L=DetectorSize, AngleGrazing=deg2rad(90)),
                               native_PositioningDirectives=Foundation.PositioningDirectives(
-                                  ReferTo='upstream',
+                                  ReferTo='source',
                                   PlaceWhat='centre',
                                   PlaceWhere='centre',
-                                  Distance=f2_v - (f1_h - f1_v))
+                                  Distance=f2_v + f1_v)
                               )
 
     d_v.native_optical_element.ComputationSettings.UseCustomSampling = UseCustomSampling
@@ -218,10 +204,10 @@ if __name__ == '__main__':
                               boundary_shape=None,
                               native_CoreOptics=Optics.Detector(L=DetectorSize, AngleGrazing=deg2rad(90)),
                               native_PositioningDirectives=Foundation.PositioningDirectives(
-                                  ReferTo='upstream',
+                                  ReferTo='source',
                                   PlaceWhat='centre',
                                   PlaceWhere='centre',
-                                  Distance=f2_h)
+                                  Distance=f2_h + f1_h)
                               )
 
     d_h.native_optical_element.ComputationSettings.UseCustomSampling = UseCustomSampling
@@ -229,7 +215,7 @@ if __name__ == '__main__':
     d_h.native_optical_element.CoreOptics.Orientation = Optics.OPTICS_ORIENTATION.HORIZONTAL
 
     beamline = WisePropagationElements()
-    beamline._WisePropagationElements__wise_propagation_elements.ComputationSettings.OrientationToCompute = [Optics.OPTICS_ORIENTATION.HORIZONTAL, Optics.OPTICS_ORIENTATION.VERTICAL]
+    beamline._WisePropagationElements__wise_propagation_elements.ComputationSettings.OrientationToCompute = [Optics.OPTICS_ORIENTATION.HORIZONTAL, Optics.OPTICS_ORIENTATION.VERTICAL]#, Optics.OPTICS_ORIENTATION.VERTICAL]
     wavefront = WiseWavefront(wise_computation_results=None)
 
     beamline.add_beamline_element(WiserBeamlineElement(optical_element=s))
@@ -237,8 +223,7 @@ if __name__ == '__main__':
 
     parameters = PropagationParameters(wavefront=wavefront, propagation_elements=beamline)
     parameters.set_additional_parameters("single_propagation", True)
-    parameters.set_additional_parameters("NPools", 5)
-
+    parameters.set_additional_parameters("NPools", 1)
     wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
 
     if not pm1_h.native_optical_element.ComputationSettings.Ignore: plot(pm1_h.native_optical_element, 'pm1_h')
@@ -247,8 +232,7 @@ if __name__ == '__main__':
 
     parameters = PropagationParameters(wavefront=wavefront, propagation_elements=beamline)
     parameters.set_additional_parameters("single_propagation", True)
-    parameters.set_additional_parameters("NPools", 5)
-
+    parameters.set_additional_parameters("NPools", 1)
     wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
 
     if not pm2_h.native_optical_element.ComputationSettings.Ignore: plot(pm2_h.native_optical_element, 'pm2_h')
@@ -257,8 +241,7 @@ if __name__ == '__main__':
 
     parameters = PropagationParameters(wavefront=wavefront, propagation_elements=beamline)
     parameters.set_additional_parameters("single_propagation", True)
-    parameters.set_additional_parameters("NPools", 5)
-
+    parameters.set_additional_parameters("NPools", 1)
     wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
 
     plot(kb_v.native_optical_element, 'kb_v')
@@ -267,8 +250,7 @@ if __name__ == '__main__':
 
     parameters = PropagationParameters(wavefront=wavefront, propagation_elements=beamline)
     parameters.set_additional_parameters("single_propagation", True)
-    parameters.set_additional_parameters("NPools", 5)
-
+    parameters.set_additional_parameters("NPools", 1)
     wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
 
     plot(kb_h.native_optical_element, 'kb_h')
@@ -277,32 +259,44 @@ if __name__ == '__main__':
     beamline.add_beamline_element(WiserBeamlineElement(optical_element=d_v))
 
     parameters = PropagationParameters(wavefront=wavefront, propagation_elements=beamline)
-    parameters.set_additional_parameters("single_propagation", False)
-    parameters.set_additional_parameters("NPools", 5)
-
+    parameters.set_additional_parameters("single_propagation", True)
+    parameters.set_additional_parameters("NPools", 1)
     wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
 
     plot(d_v.native_optical_element, 'd_v')
 
-    # DETECTOR H
+    # # DETECTOR H
     beamline.add_beamline_element(WiserBeamlineElement(optical_element=d_h))
 
     parameters = PropagationParameters(wavefront=wavefront, propagation_elements=beamline)
+    parameters.set_additional_parameters("single_propagation", True)
+    parameters.set_additional_parameters("NPools", 1)
+    wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
+
+    plot(d_h.native_optical_element, 'd_h')
+
+    # print(beamline.get_wise_propagation_elements()) # comodo per controllare la rappresentazione interna di Beamline Element
+
+    parameters = PropagationParameters(wavefront=WiseWavefront(wise_computation_results=None), propagation_elements=beamline)
     parameters.set_additional_parameters("single_propagation", False)
     parameters.set_additional_parameters("NPools", 5)
 
     wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
 
-    plot(d_h.native_optical_element, 'd_h1')
+    plot(d_v.native_optical_element, 'd_v complete')
 
-    print(beamline.get_wise_propagation_elements()) # comodo per controllare la rappresentazione interna di Beamline Element
+    # print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+    # print(wise_propagation_elements.get_wise_propagation_element(-2 if parameters.get_additional_parameter("single_propagation") else 0).Name, type(wise_propagation_elements.get_wise_propagation_element(-2 if parameters.get_additional_parameter("single_propagation") else 0)))
+    # print('FULL BEAMLINE')
+    # print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
 
     # parameters = PropagationParameters(wavefront=WiseWavefront(wise_computation_results=None), propagation_elements=beamline)
     # parameters.set_additional_parameters("single_propagation", False)
-    # parameters.set_additional_parameters("NPools", 5)
+    # parameters.set_additional_parameters("NPools", 1)
 
     # wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
 
-    # plot(d_v.native_optical_element, 'd_v')
+    # plot(pm1_h.native_optical_element, 'pm1_h')
+    plot(d_h.native_optical_element, 'd_h complete')
 
     plt.show()

@@ -75,8 +75,19 @@ class WisePropagator(Propagator1D):
         optical_element_end = wise_propagation_elements.get_propagation_element(-1).get_optical_element()
 
         oeEnd = optical_element_end.native_optical_element
+        if parameters.get_additional_parameter("single_propagation"):
+            oeStart = oeEnd.GetParent(SameOrientation=True, OnlyReference=False)
+        else:
+            oeStart = wise_propagation_elements.get_wise_propagation_element(0)
+
+        # oeEnd = optical_element_end.native_optical_element
         # oeStart is the first element [0], or the previous element [-2]
-        oeStart = wise_propagation_elements.get_wise_propagation_element(-2 if parameters.get_additional_parameter("single_propagation") else 0)
+        # print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        # print(wise_propagation_elements.get_wise_propagation_element(-2 if parameters.get_additional_parameter("single_propagation") else 0).Name, type(wise_propagation_elements.get_wise_propagation_element(-2 if parameters.get_additional_parameter("single_propagation") else 0)))
+        # print(oeStart.Name, oeEnd.Name)
+        # print(oeStart.CoreOptics.Orientation, oeEnd.CoreOptics.Orientation)
+        # print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+        # oeStart =wise_propagation_elements.get_wise_propagation_element(-2 if parameters.get_additional_parameter("single_propagation") else 0)# oeEnd.GetParent(SameOrientation=True)
 
         if PropagationManager.Instance().get_propagation_mode(WISE_APPLICATION) == PropagationMode.STEP_BY_STEP or parameters.get_additional_parameter("is_full_propagator"):
 
