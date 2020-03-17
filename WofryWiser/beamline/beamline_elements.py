@@ -3,8 +3,22 @@ from syned.beamline.beamline_element import BeamlineElement
 
 from LibWiser.Foundation import OpticalElement, PositioningDirectives
 
-
 class WiserOpticalElement(SynedOpticalElement):
+    '''
+    WiserOpticalElement acts as a generic adapter/wrapper for any optical element defined in LibWiser:
+    - SourceGaussian
+    - SourcePoint
+    - MirrorPlane
+    - MirrorElliptic
+    - MirrorSpheric
+    - Slits
+    - Detector
+
+    native_CoreOptics -> native_optical_element: LibWiser.Optics.<optical element>
+    native_PositioningDirectives: LibWiser.Foundation.PositioningDirectives
+    isSource: Flag if <optical element> is source
+    native_OpticalElement: If you want to pass a ready made optical element, then leave the rest None and only pass this
+    '''
     def __init__(self,
                  name="Undefined", boundary_shape=None, # Syned object
                  native_CoreOptics=None, # A LibWiser.Optics.Optics object
@@ -33,6 +47,9 @@ class WiserOpticalElement(SynedOpticalElement):
 
 
 class WiserBeamlineElement(BeamlineElement):
+    '''
+    Glue for beamline element. Nothing particular here.
+    '''
     def __init__(self, optical_element=WiserOpticalElement()):
         super(WiserBeamlineElement, self).__init__(optical_element=optical_element, coordinates=None)
 
