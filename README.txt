@@ -1,17 +1,24 @@
-WOFRY (Wave Optics FRamework in pYthon) for WISE 2 library
+WOFRY (Wave Optics FRamework in pYthon) for Wiser library
 ===========================================================
 
-Kernel classes for WOFRY - WISE 2 in python
+Kernel classes for WOFRY - Wiser in python.
+
+It is an intermediate layer between LibWiser and Wofry. It exists in order to ensure interoperability between the rest of OASYS codes and LibWiser - numerical integration using Huygens integral.
 
 syned package requires Python 3.3 or newer.
+
+
+Work in progress
+----------
+* initial layer for scripting
 
 
 Installing
 ----------
 
-wofrywise2 is pip installable (https://pip.pypa.io/), simply run:
+wofrywiser will be pip installable (https://pip.pypa.io/) by:
 
-    pip install wofrywise2
+    pip install wofrywiser
 
 to install it.
 
