@@ -1,12 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Mar 20 11:56:47 2017
-
-@author: Mic
-
-- Funziona
-- la lascio che c'è da correggere in EllipticalMirror pTan e quindi VersosNorm
-- la lascio che c'è ancora l'inifto bisticco tra XYCentre e XYCentre, XYF1 e XYF1
+Test script to try whether adding and removing an optical element still results in correct calculations.
 """
 import PyQt5
 
@@ -29,6 +23,7 @@ from matplotlib import pyplot as plt
 from numpy import *
 import numpy as np
 
+from LibWiser import ToolLib as tl
 from wofry.propagator.propagator import PropagationParameters, PropagationManager
 
 from WofryWiser.beamline.beamline_elements import WiserBeamlineElement
@@ -37,14 +32,8 @@ from WofryWiser.beamline.beamline_elements import WiserOpticalElement
 from WofryWiser.propagator.wavefront1D.wise_wavefront import WiseWavefront
 from WofryWiser.propagator.propagator1D.wise_propagator import WisePropagator, WisePropagationElements
 
-def plot(oe, id):
-    S = oe.ComputationData.S
-    E = oe.ComputationData.Field
-
-    plt.figure(id)
-    plt.plot(S*1e3, abs(E)**2/max(abs(E)**2))
-    plt.xlabel('mm')
-    plt.title('|E| (' + oe.Name + ')')
+def plot(oe):
+    tl.CommonPlots.IntensityAtOpticalElement(oe)
 
 # PARAMETERS
 
@@ -89,214 +78,186 @@ if __name__ == '__main__':
     Lambda = 2e-9
     Waist0 = 180e-6#Fermi.Waist0E(Lambda)
 
-    s = WiserOpticalElement(name='FEL2 source',
-                            boundary_shape=None,
-                            isSource=True,
-                            native_CoreOptics=Optics.SourceGaussian(Lambda=Lambda, Waist0=Waist0),
-                            native_PositioningDirectives=Foundation.PositioningDirectives(
-                                ReferTo='absolute',
-                                XYCentre=[0, 0],
-                                Angle=pi/4.-AngleGrazing)
-                            )
+    ww_s = WiserOpticalElement(name='FEL2 source',
+                               boundary_shape=None,
+                               isSource=True,
+                               native_CoreOptics=Optics.SourceGaussian(Lambda=Lambda, Waist0=Waist0),
+                               native_PositioningDirectives=Foundation.PositioningDirectives(
+                                   ReferTo='absolute',
+                                   XYCentre=[0, 0],
+                                   Angle=pi/4.-AngleGrazing)
+                               )
 
-    s.native_optical_element.ComputationSettings.UseSmallDisplacements = True
-    s.native_optical_element.Orientation = Optics.OPTICS_ORIENTATION.ANY
-    s.native_optical_element.CoreOptics.SmallDisplacements.Long = DeltaSourceList[0]
-    s.native_optical_element.CoreOptics.SmallDisplacements.Rotation = 0.
+    s = ww_s.native_optical_element # Wiser optical element
+    s.ComputationSettings.UseSmallDisplacements = True
+    s.Orientation = Optics.OPTICS_ORIENTATION.ANY
+    s.CoreOptics.SmallDisplacements.Long = DeltaSourceList[0]
+    s.CoreOptics.SmallDisplacements.Rotation = 0.
 
     # PM1 (h)
     #==========================================================================
-    pm1_h = WiserOpticalElement(name='pm1h',
-                               boundary_shape=None,
-                               native_CoreOptics=Optics.MirrorPlane(L=L, AngleGrazing=AngleGrazing),
-                               native_PositioningDirectives=Foundation.PositioningDirectives(
-                                   ReferTo='upstream',
-                                   PlaceWhat='centre',
-                                   PlaceWhere='centre',
-                                   Distance=20.)
-                               )
+    ww_pm1_h = WiserOpticalElement(name='pm1h',
+                                   boundary_shape=None,
+                                   native_CoreOptics=Optics.MirrorPlane(L=L, AngleGrazing=AngleGrazing),
+                                   native_PositioningDirectives=Foundation.PositioningDirectives(
+                                       ReferTo='upstream',
+                                       PlaceWhat='centre',
+                                       PlaceWhere='centre',
+                                       Distance=20.)
+                                   )
 
-    pm1_h.native_optical_element.ComputationSettings.UseFigureError = False
-    pm1_h.native_optical_element.CoreOptics.Orientation = Optics.OPTICS_ORIENTATION.HORIZONTAL
+    pm1_h = ww_pm1_h.native_optical_element # Wiser optical element
+    pm1_h.ComputationSettings.UseFigureError = False
+    pm1_h.CoreOptics.Orientation = Optics.OPTICS_ORIENTATION.HORIZONTAL
 
-    pm1_h.native_optical_element.ComputationSettings.Ignore = False          # Lo user decide di non simulare lo specchio ()
-    pm1_h.native_optical_element.ComputationSettings.UseCustomSampling = UseCustomSampling # l'utente decide di impostare a mano il campionamento
-    pm1_h.native_optical_element.ComputationSettings.NSamples = N
+    pm1_h.ComputationSettings.Ignore = False          # Lo user decide di non simulare lo specchio ()
+    pm1_h.ComputationSettings.UseCustomSampling = UseCustomSampling # l'utente decide di impostare a mano il campionamento
+    pm1_h.ComputationSettings.NSamples = N
 
     # PM2 (h)
     # ==========================================================================
-    pm2_h = WiserOpticalElement(name='pm2h',
-                                boundary_shape=None,
-                                native_CoreOptics=Optics.MirrorPlane(L=L, AngleGrazing=AngleGrazing),
-                                native_PositioningDirectives=Foundation.PositioningDirectives(
-                                    ReferTo='upstream',
-                                    PlaceWhat='centre',
-                                    PlaceWhere='centre',
-                                    Distance=20.)
-                                )
+    ww_pm2_h = WiserOpticalElement(name='pm2h',
+                                   boundary_shape=None,
+                                   native_CoreOptics=Optics.MirrorPlane(L=L, AngleGrazing=AngleGrazing),
+                                   native_PositioningDirectives=Foundation.PositioningDirectives(
+                                       ReferTo='upstream',
+                                       PlaceWhat='centre',
+                                       PlaceWhere='centre',
+                                       Distance=20.)
+                                   )
 
-    pm2_h.native_optical_element.ComputationSettings.UseFigureError = False
-    pm2_h.native_optical_element.CoreOptics.Orientation = Optics.OPTICS_ORIENTATION.HORIZONTAL
+    pm2_h = ww_pm2_h.native_optical_element # Wiser optical element
+    pm2_h.ComputationSettings.UseFigureError = False
+    pm2_h.CoreOptics.Orientation = Optics.OPTICS_ORIENTATION.HORIZONTAL
 
-    pm2_h.native_optical_element.ComputationSettings.Ignore = False  # Lo user decide di non simulare lo specchio ()
-    pm2_h.native_optical_element.ComputationSettings.UseCustomSampling = UseCustomSampling  # l'utente decide di impostare a mano il campionamento
-    pm2_h.native_optical_element.ComputationSettings.NSamples = N
+    pm2_h.ComputationSettings.Ignore = False  # Lo user decide di non simulare lo specchio ()
+    pm2_h.ComputationSettings.UseCustomSampling = UseCustomSampling  # l'utente decide di impostare a mano il campionamento
+    pm2_h.ComputationSettings.NSamples = N
 
     # KB(v)
     # ==========================================================================
-    kb_v = WiserOpticalElement(name='kb_v',
-                               boundary_shape=None,
-                               native_CoreOptics=Optics.MirrorElliptic(f1=f1_v, f2=f2_v, L=L, Alpha=AngleGrazing),
-                               native_PositioningDirectives=Foundation.PositioningDirectives(
-                                   ReferTo='source',
-                                   PlaceWhat='upstream focus',
-                                   PlaceWhere='centre')
-                               )
+    ww_kb_v = WiserOpticalElement(name='kb_v',
+                                  boundary_shape=None,
+                                  native_CoreOptics=Optics.MirrorElliptic(f1=f1_v, f2=f2_v, L=L, Alpha=AngleGrazing),
+                                  native_PositioningDirectives=Foundation.PositioningDirectives(
+                                      ReferTo='source',
+                                      PlaceWhat='upstream focus',
+                                      PlaceWhere='centre')
+                                  )
 
-    # ----- Impostazioni KB
-    kb_v.native_optical_element.CoreOptics.ComputationSettings.UseFigureError = False
-    kb_v.native_optical_element.CoreOptics.Orientation = Optics.OPTICS_ORIENTATION.VERTICAL
-    kb_v.native_optical_element.CoreOptics.ComputationSettings.UseRoughness = False
-    kb_v.native_optical_element.CoreOptics.ComputationSettings.UseSmallDisplacements = False  # serve per traslare/ruotare l'EO
-    kb_v.native_optical_element.ComputationSettings.UseCustomSampling = UseCustomSampling  # l'utente decide di impostare a mano il campionamento
-    kb_v.native_optical_element.ComputationSettings.NSamples = N
-    # kb_v.native_optical_element.CoreOptics.FigureErrorLoad(File='DATA/LTP/kbh.txt', Step=2e-3, AmplitudeScaling=-1e-3)
+    kb_v = ww_kb_v.native_optical_element
+    kb_v.CoreOptics.ComputationSettings.UseFigureError = False
+    kb_v.CoreOptics.Orientation = Optics.OPTICS_ORIENTATION.VERTICAL
+    kb_v.CoreOptics.ComputationSettings.UseRoughness = False
+    kb_v.CoreOptics.ComputationSettings.UseSmallDisplacements = False  # serve per traslare/ruotare l'EO
+
+    kb_v.ComputationSettings.UseCustomSampling = UseCustomSampling  # l'utente decide di impostare a mano il campionamento
+    kb_v.ComputationSettings.NSamples = N
+    # kb_v.CoreOptics.FigureErrorLoad(File='DATA/LTP/kbh.txt', Step=2e-3, AmplitudeScaling=-1e-3)
 
     # KB(h)
     # ==========================================================================
-    kb_h = WiserOpticalElement(name='kb_h',
-                               boundary_shape=None,
-                               native_CoreOptics=Optics.MirrorElliptic(f1=f1_h, f2=f2_h, L=L, Alpha=AngleGrazing),
-                               native_PositioningDirectives=Foundation.PositioningDirectives(
-                                   ReferTo='source',
-                                   PlaceWhat='upstream focus',
-                                   PlaceWhere='centre')
-                               )
+    ww_kb_h = WiserOpticalElement(name='kb_h',
+                                  boundary_shape=None,
+                                  native_CoreOptics=Optics.MirrorElliptic(f1=f1_h, f2=f2_h, L=L, Alpha=AngleGrazing),
+                                  native_PositioningDirectives=Foundation.PositioningDirectives(
+                                      ReferTo='source',
+                                      PlaceWhat='upstream focus',
+                                      PlaceWhere='centre')
+                                  )
 
-    # ----- Impostazioni KB
-    kb_h.native_optical_element.CoreOptics.ComputationSettings.UseFigureError = True
-    kb_h.native_optical_element.CoreOptics.Orientation = Optics.OPTICS_ORIENTATION.HORIZONTAL
-    kb_h.native_optical_element.CoreOptics.ComputationSettings.UseRoughness = False
-    kb_h.native_optical_element.CoreOptics.ComputationSettings.UseSmallDisplacements = False  # serve per traslare/ruotare l'EO
-    kb_h.native_optical_element.ComputationSettings.UseCustomSampling = UseCustomSampling  # l'utente decide di impostare a mano il campionamento
-    kb_h.native_optical_element.ComputationSettings.NSamples = N
-    kb_h.native_optical_element.CoreOptics.FigureErrorLoad(File='kbh.txt', Step=2e-3, AmplitudeScaling=-1e-3)
+    kb_h = ww_kb_h.native_optical_element
+    kb_h.CoreOptics.Orientation = Optics.OPTICS_ORIENTATION.HORIZONTAL
+    kb_h.CoreOptics.ComputationSettings.UseRoughness = False
+    kb_h.CoreOptics.ComputationSettings.UseSmallDisplacements = False  # serve per traslare/ruotare l'EO
+    kb_h.ComputationSettings.UseCustomSampling = UseCustomSampling  # l'utente decide di impostare a mano il campionamento
+    kb_h.ComputationSettings.NSamples = N
+
+    kb_h.CoreOptics.ComputationSettings.UseFigureError = True
+    kb_h.CoreOptics.FigureErrorLoad(File='kbh.txt', Step=2e-3, AmplitudeScaling=-1e-3)
+
+    ww_sl = WiserOpticalElement(name='sl',
+                                boundary_shape=None,
+                                native_CoreOptics=Optics.Slits(L=0.1),
+                                native_PositioningDirectives=Foundation.PositioningDirectives(
+                                    ReferTo='source',
+                                    PlaceWhat='centre',
+                                    PlaceWhere='centre',
+                                    Distance=f2_v + f1_v - 0.5),
+                                )
+
+    ww_sl.native_optical_element.CoreOptics.Orientation = Optics.OPTICS_ORIENTATION.VERTICAL
+    ww_sl.native_optical_element.CoreOptics.UseAsReference = False
 
     # detector (v)
     # ==========================================================================
-    d_v = WiserOpticalElement(name='detector_v',
-                              boundary_shape=None,
-                              native_CoreOptics=Optics.Detector(L=DetectorSize, AngleGrazing=deg2rad(90)),
-                              native_PositioningDirectives=Foundation.PositioningDirectives(
-                                  ReferTo='source',
-                                  PlaceWhat='centre',
-                                  PlaceWhere='centre',
-                                  Distance=f2_v + f1_v)
-                              )
+    ww_d_v = WiserOpticalElement(name='detector_v',
+                                 boundary_shape=None,
+                                 native_CoreOptics=Optics.Detector(L=DetectorSize, AngleGrazing=deg2rad(90)),
+                                 native_PositioningDirectives=Foundation.PositioningDirectives(
+                                     ReferTo='source',
+                                     PlaceWhat='centre',
+                                     PlaceWhere='centre',
+                                     Distance=f2_v + f1_v)
+                                 )
 
-    d_v.native_optical_element.ComputationSettings.UseCustomSampling = UseCustomSampling
-    d_v.native_optical_element.ComputationSettings.NSamples = N                          # come sopra. In teoria il campionamento può essere specificato elemento per elmeento
-    d_v.native_optical_element.CoreOptics.Orientation = Optics.OPTICS_ORIENTATION.VERTICAL
+    d_v = ww_d_v.native_optical_element
+    d_v.ComputationSettings.UseCustomSampling = UseCustomSampling
+    d_v.ComputationSettings.NSamples = N                          # come sopra. In teoria il campionamento può essere specificato elemento per elmeento
+    d_v.CoreOptics.Orientation = Optics.OPTICS_ORIENTATION.VERTICAL
 
     # detector (h)
     # ==========================================================================
-    d_h = WiserOpticalElement(name='detector_h',
-                              boundary_shape=None,
-                              native_CoreOptics=Optics.Detector(L=DetectorSize, AngleGrazing=deg2rad(90)),
-                              native_PositioningDirectives=Foundation.PositioningDirectives(
-                                  ReferTo='source',
-                                  PlaceWhat='centre',
-                                  PlaceWhere='centre',
-                                  Distance=f2_h + f1_h)
-                              )
+    ww_d_h = WiserOpticalElement(name='detector_h',
+                                 boundary_shape=None,
+                                 native_CoreOptics=Optics.Detector(L=DetectorSize, AngleGrazing=deg2rad(90)),
+                                 native_PositioningDirectives=Foundation.PositioningDirectives(
+                                     ReferTo='source',
+                                     PlaceWhat='centre',
+                                     PlaceWhere='centre',
+                                     Distance=f2_h + f1_h)
+                                 )
 
-    d_h.native_optical_element.ComputationSettings.UseCustomSampling = UseCustomSampling
-    d_h.native_optical_element.ComputationSettings.NSamples = N                          # come sopra. In teoria il campionamento può essere specificato elemento per elmeento
-    d_h.native_optical_element.CoreOptics.Orientation = Optics.OPTICS_ORIENTATION.HORIZONTAL
+    d_h = ww_d_h.native_optical_element
+    d_h.ComputationSettings.UseCustomSampling = UseCustomSampling
+    d_h.ComputationSettings.NSamples = N                          # come sopra. In teoria il campionamento può essere specificato elemento per elmeento
+    d_h.CoreOptics.Orientation = Optics.OPTICS_ORIENTATION.HORIZONTAL
 
     beamline = WisePropagationElements()
-    beamline._WisePropagationElements__wise_propagation_elements.ComputationSettings.OrientationToCompute = [Optics.OPTICS_ORIENTATION.HORIZONTAL, Optics.OPTICS_ORIENTATION.VERTICAL]#, Optics.OPTICS_ORIENTATION.VERTICAL]
+    beamline.get_wise_propagation_elements().ComputationSettings.OrientationToCompute = [Optics.OPTICS_ORIENTATION.HORIZONTAL, Optics.OPTICS_ORIENTATION.VERTICAL]
+
     wavefront = WiseWavefront(wise_computation_results=None)
 
-    beamline.add_beamline_element(WiserBeamlineElement(optical_element=s))
-    beamline.add_beamline_element(WiserBeamlineElement(optical_element=pm1_h))
-
-    parameters = PropagationParameters(wavefront=wavefront, propagation_elements=beamline)
-    parameters.set_additional_parameters("single_propagation", True)
-    parameters.set_additional_parameters("NPools", 1)
-    wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
-
-    if not pm1_h.native_optical_element.ComputationSettings.Ignore: plot(pm1_h.native_optical_element, 'pm1_h')
-
-    beamline.add_beamline_element(WiserBeamlineElement(optical_element=pm2_h))
-
-    parameters = PropagationParameters(wavefront=wavefront, propagation_elements=beamline)
-    parameters.set_additional_parameters("single_propagation", True)
-    parameters.set_additional_parameters("NPools", 1)
-    wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
-
-    if not pm2_h.native_optical_element.ComputationSettings.Ignore: plot(pm2_h.native_optical_element, 'pm2_h')
-
-    beamline.add_beamline_element(WiserBeamlineElement(optical_element=kb_v))
-
-    parameters = PropagationParameters(wavefront=wavefront, propagation_elements=beamline)
-    parameters.set_additional_parameters("single_propagation", True)
-    parameters.set_additional_parameters("NPools", 1)
-    wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
-
-    plot(kb_v.native_optical_element, 'kb_v')
-
-    beamline.add_beamline_element(WiserBeamlineElement(optical_element=kb_h))
-
-    parameters = PropagationParameters(wavefront=wavefront, propagation_elements=beamline)
-    parameters.set_additional_parameters("single_propagation", True)
-    parameters.set_additional_parameters("NPools", 1)
-    wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
-
-    plot(kb_h.native_optical_element, 'kb_h')
-
-    # DETECTOR V
-    beamline.add_beamline_element(WiserBeamlineElement(optical_element=d_v))
-
-    parameters = PropagationParameters(wavefront=wavefront, propagation_elements=beamline)
-    parameters.set_additional_parameters("single_propagation", True)
-    parameters.set_additional_parameters("NPools", 1)
-    wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
-
-    plot(d_v.native_optical_element, 'd_v')
-
-    # # DETECTOR H
-    beamline.add_beamline_element(WiserBeamlineElement(optical_element=d_h))
-
-    parameters = PropagationParameters(wavefront=wavefront, propagation_elements=beamline)
-    parameters.set_additional_parameters("single_propagation", True)
-    parameters.set_additional_parameters("NPools", 1)
-    wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
-
-    plot(d_h.native_optical_element, 'd_h')
-
-    # print(beamline.get_wise_propagation_elements()) # comodo per controllare la rappresentazione interna di Beamline Element
+    # Build the beamline
+    beamline.add_beamline_element(WiserBeamlineElement(optical_element=ww_s))
+    beamline.add_beamline_element(WiserBeamlineElement(optical_element=ww_pm1_h))
+    beamline.add_beamline_element(WiserBeamlineElement(optical_element=ww_kb_v))
+    beamline.add_beamline_element(WiserBeamlineElement(optical_element=ww_kb_h))
+    beamline.add_beamline_element(WiserBeamlineElement(optical_element=ww_sl))
+    beamline.add_beamline_element(WiserBeamlineElement(optical_element=ww_d_v))
+    beamline.add_beamline_element(WiserBeamlineElement(optical_element=ww_d_h))
 
     parameters = PropagationParameters(wavefront=WiseWavefront(wise_computation_results=None), propagation_elements=beamline)
     parameters.set_additional_parameters("single_propagation", False)
-    parameters.set_additional_parameters("NPools", 5)
-
+    parameters.set_additional_parameters("NPools", 1)
+    #
     wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
+    #
+    # print('Original beamline')
+    # print(beamline.get_wise_propagation_elements())
+    print(beamline.get_wise_propagation_elements())
 
-    plot(d_v.native_optical_element, 'd_v complete')
+    # # Plot the result
 
-    # print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-    # print(wise_propagation_elements.get_wise_propagation_element(-2 if parameters.get_additional_parameter("single_propagation") else 0).Name, type(wise_propagation_elements.get_wise_propagation_element(-2 if parameters.get_additional_parameter("single_propagation") else 0)))
-    # print('FULL BEAMLINE')
-    # print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+    plot(d_v)
 
-    # parameters = PropagationParameters(wavefront=WiseWavefront(wise_computation_results=None), propagation_elements=beamline)
-    # parameters.set_additional_parameters("single_propagation", False)
-    # parameters.set_additional_parameters("NPools", 1)
+    # plot(d_h)
+    #
+    # # Insert an element
+    # beamline.insert_beamline_element(index=1, new_element=WiserBeamlineElement(optical_element=ww_pm2_h))
+    # print('Beamline with inserted element')
+    # print(beamline.get_wise_propagation_elements())
 
-    # wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
 
-    # plot(pm1_h.native_optical_element, 'pm1_h')
-    plot(d_h.native_optical_element, 'd_h complete')
 
     plt.show()

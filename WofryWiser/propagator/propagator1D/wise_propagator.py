@@ -28,12 +28,14 @@ class WisePropagationElements(PropagationElements):
         self.__wise_propagation_elements.Append(beamline_element.get_optical_element().native_optical_element)
 
     def insert_beamline_element(self, index, new_element=WiserBeamlineElement(), mode=PropagationElements.INSERT_BEFORE):
+
+        existing_element_name = self.get_wise_propagation_element(index).Name  # Has to be called before calling super()
+
         super(WisePropagationElements, self).insert_beamline_element(index, new_element, mode)
 
-        self.__wise_propagation_elements.Insert(new_element.get_optical_element().native_optical_element,
-                                                ExistingName=self.get_wise_propagation_element(index).Name,
-                                                Mode=mode+1)
-
+        self.__wise_propagation_elements.Insert(NewItem=new_element.get_optical_element().native_optical_element,
+                                                ExistingName=existing_element_name,
+                                                Mode=1)
 
     def add_beamline_elements(self, beamline_elements=[]):
         for beamline_element in beamline_elements:
@@ -44,6 +46,7 @@ class WisePropagationElements(PropagationElements):
 
     def get_wise_propagation_elements(self):
         return self.__wise_propagation_elements
+
 
 class WisePropagator(Propagator1D):
 

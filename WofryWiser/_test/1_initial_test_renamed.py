@@ -1,15 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Mar 20 11:56:47 2017
-
-@author: Mic
-
-- Funziona
-- la lascio che c'è da correggere in EllipticalMirror pTan e quindi VersosNorm
-- la lascio che c'è ancora l'inifto bisticco tra XYCentre e XYCentre, XYF1 e XYF1
+Basic test script showing how to initialize elements and construct a beamline with horizontal and vertical orientation
+of optical elements. All the computation is done through an intermediate layer called WofryWiser.
 """
-import PyQt5
-
 import importlib
 
 import LibWiser.Rayman as rm
