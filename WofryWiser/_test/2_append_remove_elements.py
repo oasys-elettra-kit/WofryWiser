@@ -178,7 +178,7 @@ if __name__ == '__main__':
 
     ww_sl = WiserOpticalElement(name='sl',
                                 boundary_shape=None,
-                                native_CoreOptics=Optics.Slits(L=0.1),
+                                native_CoreOptics=Optics.Slits(L=1e-3),
                                 native_PositioningDirectives=Foundation.PositioningDirectives(
                                     ReferTo='source',
                                     PlaceWhat='centre',
@@ -195,10 +195,9 @@ if __name__ == '__main__':
                                  boundary_shape=None,
                                  native_CoreOptics=Optics.Detector(L=DetectorSize, AngleGrazing=deg2rad(90)),
                                  native_PositioningDirectives=Foundation.PositioningDirectives(
-                                     ReferTo='source',
+                                     ReferTo='upstream',
                                      PlaceWhat='centre',
-                                     PlaceWhere='centre',
-                                     Distance=f2_v + f1_v)
+                                     PlaceWhere='downstream focus')
                                  )
 
     d_v = ww_d_v.native_optical_element
@@ -212,10 +211,9 @@ if __name__ == '__main__':
                                  boundary_shape=None,
                                  native_CoreOptics=Optics.Detector(L=DetectorSize, AngleGrazing=deg2rad(90)),
                                  native_PositioningDirectives=Foundation.PositioningDirectives(
-                                     ReferTo='source',
+                                     ReferTo='upstream',
                                      PlaceWhat='centre',
-                                     PlaceWhere='centre',
-                                     Distance=f2_h + f1_h)
+                                     PlaceWhere='downstream focus')
                                  )
 
     d_h = ww_d_h.native_optical_element
@@ -243,20 +241,33 @@ if __name__ == '__main__':
     #
     wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
     #
-    # print('Original beamline')
-    # print(beamline.get_wise_propagation_elements())
-    print(beamline.get_wise_propagation_elements())
-
+    beamline_before = beamline
     # # Plot the result
 
     plot(d_v)
 
-    # plot(d_h)
+    plot(d_h)
     #
     # # Insert an element
-    # beamline.insert_beamline_element(index=1, new_element=WiserBeamlineElement(optical_element=ww_pm2_h))
-    # print('Beamline with inserted element')
+    beamline.insert_beamline_element(index=1, new_element=WiserBeamlineElement(optical_element=ww_pm2_h))
+
+    parameters = PropagationParameters(wavefront=WiseWavefront(wise_computation_results=None),
+                                       propagation_elements=beamline)
+    parameters.set_additional_parameters("single_propagation", False)
+    parameters.set_additional_parameters("NPools", 1)
+    #
+    wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters,
+                                                             handler_name=WisePropagator.HANDLER_NAME)
+
+    print('Original beamline')
     # print(beamline.get_wise_propagation_elements())
+    print(beamline_before.get_wise_propagation_elements())
+
+    plot(d_v)
+    plot(d_h)
+
+    print('Beamline with inserted element')
+    print(beamline.get_wise_propagation_elements())
 
 
 

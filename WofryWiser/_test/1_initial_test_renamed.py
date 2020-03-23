@@ -181,10 +181,9 @@ if __name__ == '__main__':
                               boundary_shape=None,
                               native_CoreOptics=Optics.Detector(L=DetectorSize, AngleGrazing=deg2rad(90)),
                               native_PositioningDirectives=Foundation.PositioningDirectives(
-                                  ReferTo='source',
+                                  ReferTo='upstream',
                                   PlaceWhat='centre',
-                                  PlaceWhere='centre',
-                                  Distance=f2_v + f1_v)
+                                  PlaceWhere='downstream focus')
                               )
 
     d_v.native_optical_element.ComputationSettings.UseCustomSampling = UseCustomSampling
@@ -197,10 +196,9 @@ if __name__ == '__main__':
                               boundary_shape=None,
                               native_CoreOptics=Optics.Detector(L=DetectorSize, AngleGrazing=deg2rad(90)),
                               native_PositioningDirectives=Foundation.PositioningDirectives(
-                                  ReferTo='source',
+                                  ReferTo='upstream',
                                   PlaceWhat='centre',
-                                  PlaceWhere='centre',
-                                  Distance=f2_h + f1_h)
+                                  PlaceWhere='downstream focus')
                               )
 
     d_h.native_optical_element.ComputationSettings.UseCustomSampling = UseCustomSampling
