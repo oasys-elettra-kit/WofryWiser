@@ -47,6 +47,8 @@ class WisePropagationElements(PropagationElements):
     def get_wise_propagation_elements(self):
         return self.__wise_propagation_elements
 
+    def refresh_wise_positions(self):
+        self.get_wise_propagation_elements().RefreshPositions()
 
 class WisePropagator(Propagator1D):
 
