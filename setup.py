@@ -9,15 +9,15 @@ try:
 except AttributeError:
     from setuptools import find_packages, setup
 
-NAME = 'wofrywise2'
+NAME = 'WofryWiser'
 
-VERSION = '1.0.1'
+VERSION = '0.0.1'
 ISRELEASED = False
 
-DESCRIPTION = 'WOFRY (Wave Optics FRamework in pYthon) for WISE 2 library'
+DESCRIPTION = 'WOFRY (Wave Optics FRamework in pYthon) for Wiser library'
 README_FILE = os.path.join(os.path.dirname(__file__), 'README.txt')
 LONG_DESCRIPTION = open(README_FILE).read()
-AUTHOR = 'Luca Rebuffi'
+AUTHOR = 'Luca Rebuffi, Aljosa Hafner'
 AUTHOR_EMAIL = 'luca.rebuffi@elettra.eu'
 URL = 'https://github.com/oasys-elettra-kit/wofrywise2'
 DOWNLOAD_URL = 'https://github.com/oasys-elettra-kit/wofrywise2'
@@ -25,14 +25,14 @@ MAINTAINER = 'Luca Rebuffi'
 MAINTAINER_EMAIL = 'luca.rebuffi@elettra.eu'
 LICENSE = 'GPLv3'
 
-KEYWORDS = (
+KEYWORDS = [
     'dictionary',
     'glossary',
     'synchrotron'
     'simulation',
-)
+]
 
-CLASSIFIERS = (
+CLASSIFIERS = [
     'Development Status :: 1 - Planning',
     'Environment :: Console',
     'Environment :: Plugins',
@@ -46,7 +46,7 @@ CLASSIFIERS = (
     'Intended Audience :: Education',
     'Intended Audience :: Science/Research',
     'Intended Audience :: Developers',
-)
+]
 
 INSTALL_REQUIRES = (
     'setuptools',
@@ -54,7 +54,7 @@ INSTALL_REQUIRES = (
     'scipy',
     'syned>=1.0.10',
     'wofry>=1.0.15',
-    'wiselib2'
+    'LibWiser'
 )
 
 SETUP_REQUIRES = (
@@ -91,7 +91,7 @@ def git_version():
     return GIT_REVISION
 
 
-def write_version_py(filename='wofrywise2/version.py'):
+def write_version_py(filename='WofryWiser/version.py'):
     # Copied from numpy setup.py
     cnt = """
 # THIS FILE IS GENERATED FROM wofrywise SETUP.PY
@@ -108,9 +108,9 @@ if not release:
     FULLVERSION = VERSION
     if os.path.exists('.git'):
         GIT_REVISION = git_version()
-    elif os.path.exists('wofrywise2/version.py'):
+    elif os.path.exists('WofryWiser/version.py'):
         # must be a source distribution, use existing version file
-        version = imp.load_source("wofrywise2.version", "wofrywise2/version.py")
+        version = imp.load_source("WofryWiser.version", "WofryWiser/version.py")
         GIT_REVISION = version.git_revision
     else:
         GIT_REVISION = "Unknown"
@@ -129,7 +129,7 @@ if not release:
 
 
 PACKAGES = [
-    "wofrywise2",
+    "WofryWiser",
 ]
 
 PACKAGE_DATA = {
