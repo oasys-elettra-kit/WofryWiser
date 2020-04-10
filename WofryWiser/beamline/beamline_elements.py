@@ -27,6 +27,23 @@ class WiserOpticalElement(SynedOpticalElement):
                  native_OpticalElement=None
                  ):
 
+        '''
+        Parameters
+        ---------------------
+        name : str
+            name of Wiser optical element
+        boundary_shape: do not know
+            No idea what this is...
+        native_CoreOptics: LibWiser.Optics.<optical element>
+            One of Wiser optical elements
+        native_PositioningDirectives: LibWiser.Foundation.PositioningDirectives
+            Wiser PositioningDirectives
+        isSource: bool
+            Source flat
+        native_OpticalElement: LibWiser.Foundation.OpticalElement
+            Pass the whole optical element, leave native_CoreOptics=None and native_PositioningDirectives=None
+        '''
+
         # Init SynedOpticalElement
         # Fills: name, boundary_shape, as required by Syned
         super(WiserOpticalElement, self).__init__(name=name, boundary_shape=boundary_shape)
