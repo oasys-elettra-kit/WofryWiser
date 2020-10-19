@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-import imp
+import importlib
 import os
 import subprocess
 
@@ -9,44 +9,37 @@ try:
 except AttributeError:
     from setuptools import find_packages, setup
 
-NAME = 'WofryWiser'
+NAME = 'wofrywiser'
 
-VERSION = '0.0.1'
-ISRELEASED = False
+VERSION = '0.1.0'
+ISRELEASED = True
 
 DESCRIPTION = 'WOFRY (Wave Optics FRamework in pYthon) for Wiser library'
 README_FILE = os.path.join(os.path.dirname(__file__), 'README.txt')
 LONG_DESCRIPTION = open(README_FILE).read()
-AUTHOR = 'Luca Rebuffi, Aljosa Hafner'
-AUTHOR_EMAIL = 'luca.rebuffi@elettra.eu'
-URL = 'https://github.com/oasys-elettra-kit/wofrywise2'
-DOWNLOAD_URL = 'https://github.com/oasys-elettra-kit/wofrywise2'
-MAINTAINER = 'Luca Rebuffi'
-MAINTAINER_EMAIL = 'luca.rebuffi@elettra.eu'
+AUTHOR = 'Luca Rebuffi, Michele Manfredda, Aljosa Hafner'
+AUTHOR_EMAIL = 'michele.manfredda@elettra.eu'
+URL = 'https://github.com/oasys-elettra-kit/wofrywiser'
+DOWNLOAD_URL = 'https://github.com/oasys-elettra-kit/wofrywiser'
+MAINTAINER = 'Aljosa Hafner'
+MAINTAINER_EMAIL = 'aljosa.hafner@ceric-eric.eu'
 LICENSE = 'GPLv3'
 
-KEYWORDS = [
+KEYWORDS = (
     'dictionary',
     'glossary',
-    'synchrotron'
-    'simulation',
-]
+    'synchrotron',
+    'simulation'
+)
 
-CLASSIFIERS = [
-    'Development Status :: 1 - Planning',
+CLASSIFIERS = (
+    'Development Status :: 4 - Beta',
     'Environment :: Console',
     'Environment :: Plugins',
     'Programming Language :: Python :: 3',
-    'License :: OSI Approved :: '
-    'GNU General Public License v3 or later (GPLv3+)',
-    'Operating System :: POSIX',
-    'Operating System :: Microsoft :: Windows',
-    'Topic :: Scientific/Engineering :: Visualization',
-    'Topic :: Software Development :: Libraries :: Python Modules',
     'Intended Audience :: Education',
-    'Intended Audience :: Science/Research',
-    'Intended Audience :: Developers',
-]
+    'Intended Audience :: Science/Research'
+)
 
 INSTALL_REQUIRES = (
     'setuptools',
@@ -54,11 +47,11 @@ INSTALL_REQUIRES = (
     'scipy',
     'syned>=1.0.10',
     'wofry>=1.0.15',
-    'LibWiser'
+    'LibWiser>=0.9.10'
 )
 
 SETUP_REQUIRES = (
-    'setuptools',
+    'setuptools'
 )
 
 
@@ -91,7 +84,7 @@ def git_version():
     return GIT_REVISION
 
 
-def write_version_py(filename='WofryWiser/version.py'):
+def write_version_py(filename='wofrywiser/version.py'):
     # Copied from numpy setup.py
     cnt = """
 # THIS FILE IS GENERATED FROM wofrywise SETUP.PY
@@ -108,9 +101,9 @@ if not release:
     FULLVERSION = VERSION
     if os.path.exists('.git'):
         GIT_REVISION = git_version()
-    elif os.path.exists('WofryWiser/version.py'):
+    elif os.path.exists('wofrywiser/version.py'):
         # must be a source distribution, use existing version file
-        version = imp.load_source("WofryWiser.version", "WofryWiser/version.py")
+        version = importlib.load_source("wofrywiser.version", "wofrywiser/version.py")
         GIT_REVISION = version.git_revision
     else:
         GIT_REVISION = "Unknown"
@@ -128,9 +121,7 @@ if not release:
         a.close()
 
 
-PACKAGES = [
-    "WofryWiser",
-]
+PACKAGES = find_packages(exclude=('*.tests', '*.tests.*', 'tests.*', 'tests'))
 
 PACKAGE_DATA = {
 }
@@ -142,6 +133,7 @@ def setup_package():
         name=NAME,
         version=VERSION,
         description=DESCRIPTION,
+        long_description_content_type = 'text/markdown',
         long_description=LONG_DESCRIPTION,
         author=AUTHOR,
         author_email=AUTHOR_EMAIL,
