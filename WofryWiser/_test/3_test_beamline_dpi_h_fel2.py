@@ -6,7 +6,7 @@ from wofry.propagator.propagator import PropagationParameters, PropagationManage
 
 from WofryWiser.beamline.beamline_elements import WiserBeamlineElement, WiserOpticalElement
 from WofryWiser.propagator.wavefront1D.wise_wavefront import WiseWavefront
-from WofryWiser.propagator.propagator1D.wise_propagator import WisePropagator, WisePropagationElements
+from WofryWiser.propagator.propagator1D.wise_propagator import WiserPropagator, WiserPropagationElements
 
 from LibWiser.WiserImport import *
 import LibWiser.FermiSource as FermiSource
@@ -51,7 +51,7 @@ DetectorSize = 100e-6
 print(__name__)
 if __name__ == '__main__':
 
-    PropagationManager.Instance().add_propagator(WisePropagator())
+    PropagationManager.Instance().add_propagator(WiserPropagator())
 
     # SOURCE (H, V)
     # -----------------------------------------------------------------------------
@@ -149,7 +149,7 @@ if __name__ == '__main__':
     # Create beamline
     # -----------------------------------------------------------------------------
 
-    th = WisePropagationElements()
+    th = WiserPropagationElements()
     th.get_wise_propagation_elements().ComputationSettings.OrientationToCompute = [Optics.OPTICS_ORIENTATION.HORIZONTAL]
     th.add_beamline_element(WiserBeamlineElement(optical_element=ww_s))
     th.add_beamline_element(WiserBeamlineElement(optical_element=ww_pm2a))
@@ -242,7 +242,7 @@ if __name__ == '__main__':
     parameters.set_additional_parameters("NPools", 1)
 
     wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters,
-                                                             handler_name=WisePropagator.HANDLER_NAME)
+                                                             handler_name=WiserPropagator.HANDLER_NAME)
     # Plot results
     # -----------------------------------------------------------------------------
 

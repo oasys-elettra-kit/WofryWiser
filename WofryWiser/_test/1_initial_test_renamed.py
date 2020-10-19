@@ -28,7 +28,7 @@ from WofryWiser.beamline.beamline_elements import WiserBeamlineElement
 from WofryWiser.beamline.beamline_elements import WiserOpticalElement
 
 from WofryWiser.propagator.wavefront1D.wise_wavefront import WiseWavefront
-from WofryWiser.propagator.propagator1D.wise_propagator import WisePropagator, WisePropagationElements
+from WofryWiser.propagator.propagator1D.wise_propagator import WiserPropagator, WiserPropagationElements
 
 def plot(oe, id):
     S = oe.ComputationData.S
@@ -72,7 +72,7 @@ single_time = []
 print(__name__)
 if __name__ == '__main__':
 
-    PropagationManager.Instance().add_propagator(WisePropagator())
+    PropagationManager.Instance().add_propagator(WiserPropagator())
 
     tl.Debug.On = True
     N = 3000
@@ -205,7 +205,7 @@ if __name__ == '__main__':
     d_h.native_optical_element.ComputationSettings.NSamples = N                          # come sopra. In teoria il campionamento può essere specificato elemento per elmeento
     d_h.native_optical_element.CoreOptics.Orientation = Optics.OPTICS_ORIENTATION.HORIZONTAL
 
-    beamline = WisePropagationElements()
+    beamline = WiserPropagationElements()
     beamline._WisePropagationElements__wise_propagation_elements.ComputationSettings.OrientationToCompute = [Optics.OPTICS_ORIENTATION.HORIZONTAL, Optics.OPTICS_ORIENTATION.VERTICAL]#, Optics.OPTICS_ORIENTATION.VERTICAL]
     wavefront = WiseWavefront(wise_computation_results=None)
 
@@ -215,7 +215,7 @@ if __name__ == '__main__':
     parameters = PropagationParameters(wavefront=wavefront, propagation_elements=beamline)
     parameters.set_additional_parameters("single_propagation", True)
     parameters.set_additional_parameters("NPools", 1)
-    wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
+    wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WiserPropagator.HANDLER_NAME)
 
     if not pm1_h.native_optical_element.ComputationSettings.Ignore: plot(pm1_h.native_optical_element, 'pm1_h')
 
@@ -224,7 +224,7 @@ if __name__ == '__main__':
     parameters = PropagationParameters(wavefront=wavefront, propagation_elements=beamline)
     parameters.set_additional_parameters("single_propagation", True)
     parameters.set_additional_parameters("NPools", 1)
-    wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
+    wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WiserPropagator.HANDLER_NAME)
 
     if not pm2_h.native_optical_element.ComputationSettings.Ignore: plot(pm2_h.native_optical_element, 'pm2_h')
 
@@ -233,7 +233,7 @@ if __name__ == '__main__':
     parameters = PropagationParameters(wavefront=wavefront, propagation_elements=beamline)
     parameters.set_additional_parameters("single_propagation", True)
     parameters.set_additional_parameters("NPools", 1)
-    wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
+    wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WiserPropagator.HANDLER_NAME)
 
     plot(kb_v.native_optical_element, 'kb_v')
 
@@ -242,7 +242,7 @@ if __name__ == '__main__':
     parameters = PropagationParameters(wavefront=wavefront, propagation_elements=beamline)
     parameters.set_additional_parameters("single_propagation", True)
     parameters.set_additional_parameters("NPools", 1)
-    wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
+    wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WiserPropagator.HANDLER_NAME)
 
     plot(kb_h.native_optical_element, 'kb_h')
 
@@ -252,7 +252,7 @@ if __name__ == '__main__':
     parameters = PropagationParameters(wavefront=wavefront, propagation_elements=beamline)
     parameters.set_additional_parameters("single_propagation", True)
     parameters.set_additional_parameters("NPools", 1)
-    wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
+    wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WiserPropagator.HANDLER_NAME)
 
     plot(d_v.native_optical_element, 'd_v')
 
@@ -262,7 +262,7 @@ if __name__ == '__main__':
     parameters = PropagationParameters(wavefront=wavefront, propagation_elements=beamline)
     parameters.set_additional_parameters("single_propagation", True)
     parameters.set_additional_parameters("NPools", 1)
-    wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
+    wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WiserPropagator.HANDLER_NAME)
 
     plot(d_h.native_optical_element, 'd_h')
 
@@ -272,7 +272,7 @@ if __name__ == '__main__':
     parameters.set_additional_parameters("single_propagation", False)
     parameters.set_additional_parameters("NPools", 5)
 
-    wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
+    wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WiserPropagator.HANDLER_NAME)
 
     plot(d_v.native_optical_element, 'd_v complete')
 

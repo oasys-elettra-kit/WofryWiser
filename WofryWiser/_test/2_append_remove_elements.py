@@ -30,7 +30,7 @@ from WofryWiser.beamline.beamline_elements import WiserBeamlineElement
 from WofryWiser.beamline.beamline_elements import WiserOpticalElement
 
 from WofryWiser.propagator.wavefront1D.wise_wavefront import WiseWavefront
-from WofryWiser.propagator.propagator1D.wise_propagator import WisePropagator, WisePropagationElements
+from WofryWiser.propagator.propagator1D.wise_propagator import WiserPropagator, WiserPropagationElements
 
 def plot(oe):
     tl.CommonPlots.IntensityAtOpticalElement(oe)
@@ -68,7 +68,7 @@ single_time = []
 print(__name__)
 if __name__ == '__main__':
 
-    PropagationManager.Instance().add_propagator(WisePropagator())
+    PropagationManager.Instance().add_propagator(WiserPropagator())
 
     tl.Debug.On = True
     N = 3000
@@ -221,7 +221,7 @@ if __name__ == '__main__':
     d_h.ComputationSettings.NSamples = N                          # come sopra. In teoria il campionamento può essere specificato elemento per elmeento
     d_h.CoreOptics.Orientation = Optics.OPTICS_ORIENTATION.HORIZONTAL
 
-    beamline = WisePropagationElements()
+    beamline = WiserPropagationElements()
     beamline.get_wise_propagation_elements().ComputationSettings.OrientationToCompute = [Optics.OPTICS_ORIENTATION.HORIZONTAL, Optics.OPTICS_ORIENTATION.VERTICAL]
 
     wavefront = WiseWavefront(wise_computation_results=None)
@@ -239,7 +239,7 @@ if __name__ == '__main__':
     parameters.set_additional_parameters("single_propagation", False)
     parameters.set_additional_parameters("NPools", 1)
     #
-    wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WisePropagator.HANDLER_NAME)
+    wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters, handler_name=WiserPropagator.HANDLER_NAME)
     #
     beamline_before = beamline
     # # Plot the result
@@ -257,7 +257,7 @@ if __name__ == '__main__':
     parameters.set_additional_parameters("NPools", 1)
     #
     wavefront = PropagationManager.Instance().do_propagation(propagation_parameters=parameters,
-                                                             handler_name=WisePropagator.HANDLER_NAME)
+                                                             handler_name=WiserPropagator.HANDLER_NAME)
 
     print('Original beamline')
     # print(beamline.get_wise_propagation_elements())

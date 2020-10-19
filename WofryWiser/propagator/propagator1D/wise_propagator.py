@@ -13,17 +13,17 @@ from LibWiser import Foundation, Optics
 
 WISE_APPLICATION = "All"
 
-class WisePropagationElements(PropagationElements):
+class WiserPropagationElements(PropagationElements):
 
     __wise_propagation_elements = None
 
     def __init__(self):
-        super(WisePropagationElements, self).__init__()
+        super(WiserPropagationElements, self).__init__()
 
         self.__wise_propagation_elements = Foundation.BeamlineElements()
 
     def add_beamline_element(self, beamline_element=WiserBeamlineElement()):
-        super(WisePropagationElements, self).add_beamline_element(beamline_element)
+        super(WiserPropagationElements, self).add_beamline_element(beamline_element)
 
         self.__wise_propagation_elements.Append(beamline_element.get_optical_element().native_optical_element)
 
@@ -31,7 +31,7 @@ class WisePropagationElements(PropagationElements):
 
         existing_element_name = self.get_wise_propagation_element(index).Name  # Has to be called before calling super()
 
-        super(WisePropagationElements, self).insert_beamline_element(index, new_element, mode)
+        super(WiserPropagationElements, self).insert_beamline_element(index, new_element, mode)
 
         self.__wise_propagation_elements.Insert(NewItem=new_element.get_optical_element().native_optical_element,
                                                 ExistingName=existing_element_name,
@@ -50,9 +50,9 @@ class WisePropagationElements(PropagationElements):
     def refresh_wise_positions(self):
         self.get_wise_propagation_elements().RefreshPositions()
 
-class WisePropagator(Propagator1D):
+class WiserPropagator(Propagator1D):
 
-    HANDLER_NAME = "WISE2_PROPAGATOR"
+    HANDLER_NAME = "WISER_PROPAGATOR"
 
     def get_handler_name(self):
         return self.HANDLER_NAME
