@@ -6,8 +6,8 @@ angstroms_to_eV = codata.h*codata.c/codata.e*1e10
 from wofry.propagator.wavefront1D.generic_wavefront import GenericWavefront1D
 from wofry.propagator.propagator import Propagator1D, PropagationParameters, PropagationElements, PropagationManager, PropagationMode
 
-from WofryWiser.propagator.wavefront1D.wise_wavefront import WiseWavefront
-from WofryWiser.beamline.beamline_elements import WiserBeamlineElement
+from wofrywiser.propagator.wavefront1D.wise_wavefront import WiseWavefront
+from wofrywiser.beamline.beamline_elements import WiserBeamlineElement
 
 from LibWiser import Foundation, Optics
 

@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-import imp
+import importlib
 import os
 import subprocess
 
@@ -103,7 +103,7 @@ if not release:
         GIT_REVISION = git_version()
     elif os.path.exists('wofrywiser/version.py'):
         # must be a source distribution, use existing version file
-        version = imp.load_source("wofrywiser.version", "wofrywiser/version.py")
+        version = importlib.load_source("wofrywiser.version", "wofrywiser/version.py")
         GIT_REVISION = version.git_revision
     else:
         GIT_REVISION = "Unknown"
