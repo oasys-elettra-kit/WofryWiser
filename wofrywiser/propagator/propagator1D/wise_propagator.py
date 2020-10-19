@@ -6,7 +6,7 @@ angstroms_to_eV = codata.h*codata.c/codata.e*1e10
 from wofry.propagator.wavefront1D.generic_wavefront import GenericWavefront1D
 from wofry.propagator.propagator import Propagator1D, PropagationParameters, PropagationElements, PropagationManager, PropagationMode
 
-from wofrywiser.propagator.wavefront1D.wise_wavefront import WiseWavefront
+from wofrywiser.propagator.wavefront1D.wise_wavefront import WiserWavefront
 from wofrywiser.beamline.beamline_elements import WiserBeamlineElement
 
 from LibWiser import Foundation, Optics
@@ -66,10 +66,10 @@ class WiserPropagator(Propagator1D):
             is_generic_wavefront = False
 
         if not is_generic_wavefront and not wavefront is None:
-            if not isinstance(wavefront, WiseWavefront): raise ValueError("Wavefront cannot be managed by this propagator")
+            if not isinstance(wavefront, WiserWavefront): raise ValueError("Wavefront cannot be managed by this propagator")
 
         if is_generic_wavefront:
-            wavefront = WiseWavefront.fromGenericWavefront(wavefront)
+            wavefront = WiserWavefront.fromGenericWavefront(wavefront)
 
         wise_propagation_elements = parameters.get_PropagationElements()
 
@@ -99,7 +99,7 @@ class WiserPropagator(Propagator1D):
             beamline.RefreshPositions()
             beamline.ComputeFields(oeStart=oeStart, oeEnd=oeEnd, Verbose=False)
 
-            result = WiseWavefront(wise_computation_results=oeEnd.ComputationData)
+            result = WiserWavefront(wiser_computation_results=oeEnd.ComputationData)
         elif PropagationManager.Instance().get_propagation_mode(WISE_APPLICATION) == PropagationMode.WHOLE_BEAMLINE:
             result = wavefront
         else:

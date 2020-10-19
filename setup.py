@@ -11,7 +11,7 @@ except AttributeError:
 
 NAME = 'wofrywiser'
 
-VERSION = '0.1.0'
+VERSION = '0.1.2'
 ISRELEASED = True
 
 DESCRIPTION = 'WOFRY (Wave Optics FRamework in pYthon) for Wiser library'
@@ -84,41 +84,41 @@ def git_version():
     return GIT_REVISION
 
 
-def write_version_py(filename='wofrywiser/version.py'):
-    # Copied from numpy setup.py
-    cnt = """
-# THIS FILE IS GENERATED FROM wofrywise SETUP.PY
-short_version = '%(version)s'
-version = '%(version)s'
-full_version = '%(full_version)s'
-git_revision = '%(git_revision)s'
-release = %(isrelease)s
+#def write_version_py(filename='wofrywiser/version.py'):
+    #Copied from numpy setup.py
+    #cnt = """
+#THIS FILE IS GENERATED FROM wofrywise SETUP.PY
+#short_version = '%(version)s'
+#version = '%(version)s'
+#full_version = '%(full_version)s'
+#git_revision = '%(git_revision)s'
+#release = %(isrelease)s
 
-if not release:
-    version = full_version
-    short_version += ".dev"
-"""
-    FULLVERSION = VERSION
-    if os.path.exists('.git'):
-        GIT_REVISION = git_version()
-    elif os.path.exists('wofrywiser/version.py'):
-        # must be a source distribution, use existing version file
-        version = importlib.load_source("wofrywiser.version", "wofrywiser/version.py")
-        GIT_REVISION = version.git_revision
-    else:
-        GIT_REVISION = "Unknown"
+#if not release:
+    #version = full_version
+    #short_version += ".dev"
+#"""
+    #FULLVERSION = VERSION
+    #if os.path.exists('.git'):
+        #GIT_REVISION = git_version()
+    #elif os.path.exists('wofrywiser/version.py'):
+        #must be a source distribution, use existing version file
+        #version = importlib.load_source("wofrywiser.version", "wofrywiser/version.py")
+        #GIT_REVISION = version.git_revision
+    #else:
+        #GIT_REVISION = "Unknown"
 
-    if not ISRELEASED:
-        FULLVERSION += '.dev0+' + GIT_REVISION[:7]
+    #if not ISRELEASED:
+        #FULLVERSION += '.dev0+' + GIT_REVISION[:7]
 
-    a = open(filename, 'w')
-    try:
-        a.write(cnt % {'version': VERSION,
-                       'full_version': FULLVERSION,
-                       'git_revision': GIT_REVISION,
-                       'isrelease': str(ISRELEASED)})
-    finally:
-        a.close()
+    #a = open(filename, 'w')
+    #try:
+        #a.write(cnt % {'version': VERSION,
+                       #'full_version': FULLVERSION,
+                       #'git_revision': GIT_REVISION,
+                       #'isrelease': str(ISRELEASED)})
+    #finally:
+        #a.close()
 
 
 PACKAGES = find_packages(exclude=('*.tests', '*.tests.*', 'tests.*', 'tests'))
@@ -128,7 +128,6 @@ PACKAGE_DATA = {
 
 
 def setup_package():
-    write_version_py()
     setup(
         name=NAME,
         version=VERSION,
