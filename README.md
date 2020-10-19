@@ -16,9 +16,9 @@ Work in progress
 Installing
 ----------
 
-wofrywiser will be pip installable (https://pip.pypa.io/) by:
+wofrywiser is pip installable (https://pip.pypa.io/) by:
 
-    pip install wofrywise2
+    pip install wofrywiser
 
 to install it.
 
